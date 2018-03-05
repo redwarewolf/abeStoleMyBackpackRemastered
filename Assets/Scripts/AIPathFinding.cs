@@ -55,13 +55,4 @@ public class AIPathFinding : PhysicsObject {
         //attackArea.offset = new Vector2(attackArea.offset.x * (-1), 0);
     }
 
-    void attack()
-    {
-
-    }
-
-    void receiveAttack(int damage)
-    {
-
-    }
 }

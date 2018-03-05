@@ -284,7 +284,10 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\AIPathFinding.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Scripts\Coin.cs" />
+    <Compile Include="Assets\Scripts\EnemiesInRange.cs" />
     <Compile Include="Assets\Scripts\EnemyAttack.cs" />
+    <Compile Include="Assets\Scripts\EnemyBehaviour.cs" />
     <Compile Include="Assets\Scripts\PhysicsObject.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
   </ItemGroup>

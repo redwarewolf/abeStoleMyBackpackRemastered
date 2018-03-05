@@ -12,15 +12,23 @@ public class PlayerController : PhysicsObject {
     private Animator animator;
 
     public BoxCollider2D attackArea;
+    private List<Collider2D> targetsInRange;
 
     public Text livesUI;
+    public Text pointsUI;
+    private int points = 0;
     private int lives = 5;
+
+    private int damage = 1;
 
     // Use this for initialization
     void Awake()
     {
+        targetsInRange = new List<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+
+        pointsUI.text = points.ToString();
     }
 
     protected override void ComputeVelocity()
@@ -31,10 +39,8 @@ public class PlayerController : PhysicsObject {
 
         if (Input.GetKey("f"))
         {
-
             Debug.Log("Key Pressed F");
             attack();
-
         }
 
 
@@ -70,20 +76,23 @@ public class PlayerController : PhysicsObject {
 
     void attack()
     {
-
+        foreach(BoxCollider2D target in targetsInRange)
+        {
+            target.GetComponent<EnemyBehaviour>().receiveAttack(damage,transform);
+        }
     }
 
     public void receiveAttack(int damage,Transform attackerPosition)
     {
         lives = Mathf.Max(lives - damage,0);
-        livesUI.text = lives.ToString();
+        updateUI();
         knockback(damage,attackerPosition);
     }
 
     public void knockback(int force, Transform attackerPosition)
     {
         cameraShake();
-        float direction = Mathf.Sign(attackerPosition.position.x - transform.position.x);
+        float direction = (Mathf.Sign(attackerPosition.position.x - transform.position.x))*(-1);
         rb2d.AddForce(new Vector2(direction * force * 40, 1*force*30));
 
     }
@@ -91,5 +100,38 @@ public class PlayerController : PhysicsObject {
     public void cameraShake()
     {
         //TODO: Camera Shake when attacked.
+    }
+
+    public void earnPoints(int pointsAmmount)
+    {
+        points += pointsAmmount;
+        updateUI();
+    }
+    private void updateUI()
+    {
+        livesUI.text = lives.ToString();
+        pointsUI.text = pointsUI.ToString();
+    }
+
+    private void die()
+    {
+       
+    }
+
+    public void addEnemyInRange(Collider2D enemy)
+    {
+        if (!targetsInRange.Contains(enemy))
+        {
+            targetsInRange.Add(enemy);
+        }
+        Debug.Log("Enemies In range:" + targetsInRange.Count);
+    }
+
+    public void enemyLeftRange(Collider2D enemy)
+    {
+        if (targetsInRange.Contains(enemy))
+        {
+            targetsInRange.Remove(enemy);
+        }
     }
 }
