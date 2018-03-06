@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Empty
   - Enemy
+  - PlayerTrigger
   layers:
   - Default
   - TransparentFX
