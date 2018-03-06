@@ -10,7 +10,6 @@ public class AIPathFinding : PhysicsObject {
     public float minHeightForJump = 0.2f;
 
     private SpriteRenderer spriteRenderer;
-    private Animator animator;
 
     public Transform target;
     public float updateRate = 2f;
@@ -19,7 +18,6 @@ public class AIPathFinding : PhysicsObject {
     void Awake ()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        //animator = GetComponent<Animator>();
     }
 
     protected override void ComputeVelocity()
@@ -40,10 +38,6 @@ public class AIPathFinding : PhysicsObject {
             flipCharacter();
         }
 
-        /*animator.SetFloat("velocityY", velocity.y);
-        animator.SetBool("grounded", grounded);
-        animator.SetBool("moving", move.x != 0);*/
-
         targetVelocity = move * maxSpeed;
 
         move.x = 0;
@@ -52,7 +46,6 @@ public class AIPathFinding : PhysicsObject {
     void flipCharacter()
     {
         spriteRenderer.flipX = !spriteRenderer.flipX;
-        //attackArea.offset = new Vector2(attackArea.offset.x * (-1), 0);
     }
 
 }

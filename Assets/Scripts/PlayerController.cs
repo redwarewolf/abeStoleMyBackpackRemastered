@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : PhysicsObject {
 
@@ -14,16 +15,23 @@ public class PlayerController : PhysicsObject {
     public BoxCollider2D attackArea;
     private List<Collider2D> targetsInRange;
 
-    public Text livesUI;
-    public Text pointsUI;
+    public TMP_Text livesUI;
+    public TMP_Text pointsUI;
     private int points = 0;
     private int lives = 5;
 
     private int damage = 1;
 
+    private float nextAttack;
+    private float damagedInvulnerabilityTime;
+    public float attackCd = 0.7f;
+    public float damagedCd = 0.7f;
+
     // Use this for initialization
     void Awake()
     {
+        nextAttack = Time.time;
+        damagedInvulnerabilityTime = Time.time;
         targetsInRange = new List<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
@@ -33,13 +41,13 @@ public class PlayerController : PhysicsObject {
 
     protected override void ComputeVelocity()
     {
+        
         Vector2 move = Vector2.zero;
 
         move.x = Input.GetAxis("Horizontal");
 
-        if (Input.GetKey("f"))
+        if (Input.GetKeyDown("f") && Time.time >nextAttack)
         {
-            Debug.Log("Key Pressed F");
             attack();
         }
 
@@ -76,7 +84,8 @@ public class PlayerController : PhysicsObject {
 
     void attack()
     {
-        foreach(BoxCollider2D target in targetsInRange)
+        nextAttack = Time.time + attackCd;
+        foreach (BoxCollider2D target in targetsInRange)
         {
             target.GetComponent<EnemyBehaviour>().receiveAttack(damage,transform);
         }
@@ -84,16 +93,25 @@ public class PlayerController : PhysicsObject {
 
     public void receiveAttack(int damage,Transform attackerPosition)
     {
-        lives = Mathf.Max(lives - damage,0);
-        updateUI();
-        knockback(damage,attackerPosition);
+        if(Time.time > damagedInvulnerabilityTime)
+        {
+            damagedInvulnerabilityTime = Time.time + damagedCd;
+            lives = Mathf.Max(lives - damage, 0);
+            updateUI();
+            knockback(damage, attackerPosition);
+            StartCoroutine(InvulnerabilityColor());
+            if (lives == 0)
+            {
+                die();
+            }
+        }
     }
 
     public void knockback(int force, Transform attackerPosition)
     {
         cameraShake();
         float direction = (Mathf.Sign(attackerPosition.position.x - transform.position.x))*(-1);
-        rb2d.AddForce(new Vector2(direction * force * 40, 1*force*30));
+        rb2d.AddForce(new Vector2(direction * force * 80, 1*force*60));
 
     }
 
@@ -110,21 +128,23 @@ public class PlayerController : PhysicsObject {
     private void updateUI()
     {
         livesUI.text = lives.ToString();
-        pointsUI.text = pointsUI.ToString();
+        pointsUI.text = points.ToString();
     }
 
     private void die()
     {
-       
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void addEnemyInRange(Collider2D enemy)
     {
+        //Debug.Log("Enemies in range:" + targetsInRange.Count);
         if (!targetsInRange.Contains(enemy))
         {
             targetsInRange.Add(enemy);
+           // Debug.Log("Added new Enemy. Enemies In Range:" + targetsInRange.Count);
         }
-        Debug.Log("Enemies In range:" + targetsInRange.Count);
+
     }
 
     public void enemyLeftRange(Collider2D enemy)
@@ -133,5 +153,11 @@ public class PlayerController : PhysicsObject {
         {
             targetsInRange.Remove(enemy);
         }
+    }
+    private IEnumerator InvulnerabilityColor()
+    {
+        GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.3f);
+        yield return new WaitForSeconds(damagedCd);
+        GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
     }
 }
