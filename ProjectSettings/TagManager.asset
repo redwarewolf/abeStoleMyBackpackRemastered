@@ -7,6 +7,7 @@ TagManager:
   - Empty
   - Enemy
   - PlayerTrigger
+  - Interactable
   layers:
   - Default
   - TransparentFX
@@ -43,4 +44,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 2134294485
+    locked: 0
+  - name: Items
+    uniqueID: 3542356451
     locked: 0

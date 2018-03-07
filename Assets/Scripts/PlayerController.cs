@@ -27,6 +27,9 @@ public class PlayerController : PhysicsObject {
     public float attackCd = 0.7f;
     public float damagedCd = 0.7f;
 
+    public SpriteRenderer interactButton;
+    private InteractObject interactable;
+
     // Use this for initialization
     void Awake()
     {
@@ -49,6 +52,11 @@ public class PlayerController : PhysicsObject {
         if (Input.GetKeyDown("f") && Time.time >nextAttack)
         {
             attack();
+        }
+
+        if (Input.GetKeyDown("e") && interactable != null)
+        {
+            interact();
         }
 
 
@@ -138,11 +146,9 @@ public class PlayerController : PhysicsObject {
 
     public void addEnemyInRange(Collider2D enemy)
     {
-        //Debug.Log("Enemies in range:" + targetsInRange.Count);
         if (!targetsInRange.Contains(enemy))
         {
             targetsInRange.Add(enemy);
-           // Debug.Log("Added new Enemy. Enemies In Range:" + targetsInRange.Count);
         }
 
     }
@@ -159,5 +165,30 @@ public class PlayerController : PhysicsObject {
         GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.3f);
         yield return new WaitForSeconds(damagedCd);
         GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
+    }
+
+    public void enableInteractButton()
+    {
+        interactButton.enabled = true;
+    }
+
+    public void disableInteractButton()
+    {
+        interactButton.enabled = false;
+    }
+
+    public void addInteractable(InteractObject newInteractable)
+    {
+        interactable = newInteractable;
+    }
+
+    public void removeInteractable(InteractObject newInteractable)
+    {
+        interactable = null;
+    }
+
+    void interact()
+    {
+        interactable.interact();
     }
 }
