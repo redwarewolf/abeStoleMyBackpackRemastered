@@ -399,11 +399,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogue:
-    name: Pip The Baker
+    name: Sol
     sentences:
-    - "Hello, I'm Pip and I will bHola, mi nombre es Pip y te ir\xE9 guiando a trav\xE9s
-      del juego"
-    - "Yo que vos....te recomendar\xEDa que prestes atenci\xF3n a mis consejos"
+    - Hola Me llamo Sol, todo bien?
+    - "No le agregu\xE9 mucho m\xE1s"
     - Para empezar.... No toques a mi consolador, es grande, es rosa y no me gusta
       compartirlo.
 --- !u!224 &217707044 stripped
@@ -1008,6 +1007,11 @@ Prefab:
       propertyPath: cameraShake
       value: 
       objectReference: {fileID: 1063462795}
+    - target: {fileID: 114283542381636330, guid: 38762333ba237f045b8fe41948c1d38c,
+        type: 2}
+      propertyPath: jumpTakeOffSpeed
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 38762333ba237f045b8fe41948c1d38c, type: 2}
   m_IsPrefabParent: 0
